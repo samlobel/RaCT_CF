@@ -1,0 +1,9 @@
+numpy
+# tensorflow>=1.10.0,<1.11
+bottleneck
+pandas
+scipy
+seaborn
+matplotlib
+scikit-learn==0.20.0
+jupyter
