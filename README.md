@@ -1,6 +1,6 @@
 # Ranking-Critical Training for Collaborative Filtering
 
-This repository implements Ranking-Critical Training (RaCT) for Collaborative Filtering. 
+This repository implements [Ranking-Critical Training (RaCT) for Collaborative Filtering](https://arxiv.org/abs/1906.04281) 
 
 By using an actor-critic architecture to fine-tune a differentiable collaborative filtering model as shown in (b), we can improve the performance of a variety of MLE-based recommander functions, such as variational auto-encoders in (a).
 
