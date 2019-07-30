@@ -9,13 +9,16 @@ if __name__ == '__main__':
 
     print("\n\n\nIMPORTANT!!!!\nThis is UNNORMALIZED DCG\n\n\n")
 
-    # BREAK_EARLY = False
-    # BATCH_SIZE = 500
-    BREAK_EARLY = True
-    BATCH_SIZE = 50
-    N_EPOCHS_PRED_ONLY = 3 # will be 100
-    N_EPOCHS_AC_ONLY=5 # will be 50
-    N_EPOCHS_PRED_AND_AC=5 # will be 50
+    BREAK_EARLY = False
+    BATCH_SIZE = 500
+    N_EPOCHS_PRED_ONLY = 100 # will be 100
+    N_EPOCHS_AC_ONLY=50 # will be 50
+    N_EPOCHS_PRED_AND_AC=50 # will be 50
+    # BREAK_EARLY = True
+    # BATCH_SIZE = 50
+    # N_EPOCHS_PRED_ONLY = 3 # will be 100
+    # N_EPOCHS_AC_ONLY=5 # will be 50
+    # N_EPOCHS_PRED_AND_AC=5 # will be 50
 
 
     for data_subdir in ['ml-20m']:
