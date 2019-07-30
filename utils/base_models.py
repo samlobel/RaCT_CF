@@ -341,13 +341,35 @@ class CriticModelMixin:
             renorm=True,  #Not sure. But makes it use closer stats for training and testing.
         )
 
+    def _get_final_activation_fn(self):
+        unbounded_metrics = ['DCG']
+        if getattr(self, 'evaluation_metric') in unbounded_metrics:
+            print("\n\nwe want it to be positive, so we'll use softplus. I think that's fair.\n\n")
+            return tf.nn.softplus
+        else:
+            return tf.nn.sigmoid
+
     def _create_critic_network(self):
+
+        # THIS IS A REALLY IMPORTANT LINE. MAKES THE OUTPUT UNBOUNDED FOR DCG...
+        critic_activation_fn = self._get_final_activation_fn()
+
         h = slim.fully_connected(self.ac_input, 100, activation_fn=tf.nn.relu)
         h = slim.fully_connected(h, 100, activation_fn=tf.nn.relu)
         h = slim.fully_connected(h, 10, activation_fn=tf.nn.relu)
-        critic_output = slim.fully_connected(h, 1, activation_fn=tf.nn.sigmoid)
+        critic_output = slim.fully_connected(h, 1, activation_fn=critic_activation_fn)
         critic_output = tf.squeeze(critic_output)
         self.critic_output = critic_output
+
+    def _return_unnormalized_dcg_given_args(self, our_outputs=None, true_outputs=None, input_batch=None):
+        # This is NDCG, but not normalized by IDCG...
+        assert our_outputs is not None
+        assert true_outputs is not None
+        assert input_batch is not None
+
+        # The False at the end is what makes it UNNORMALIZED
+        return tf.py_func(NDCG_binary_at_k_batch, [our_outputs, true_outputs, 100, input_batch, False],
+                          tf.float32)
 
     def _return_ndcg_given_args(self, our_outputs=None, true_outputs=None, input_batch=None):
         """
@@ -481,6 +503,11 @@ class CriticModelMixin:
         self.critic_regularization_loss = reg_var
 
     def construct_critic_error(self):
+        true_dcg = self._return_unnormalized_dcg_given_args(
+            our_outputs=self.prediction,
+            true_outputs=self.remaining_input,
+            input_batch=self.network_input)
+
         true_ndcg = self._return_ndcg_given_args(
             our_outputs=self.prediction,
             true_outputs=self.remaining_input,
@@ -516,7 +543,6 @@ class CriticModelMixin:
             true_outputs=self.remaining_input,
             input_batch=self.network_input)
 
-
         if self.evaluation_metric == 'NDCG':
             print("Evaluating with NDCG")
             evaluation_metric = true_ndcg
@@ -530,6 +556,8 @@ class CriticModelMixin:
         elif self.evaluation_metric == 'NDCG_AT_1':
             evaluation_metric = true_ndcg_at_1
 
+        elif self.evaluation_metric == 'DCG':
+            evaluation_metric = true_dcg
 
         # elif self.evaluation_metric == 'AP':
         #     print("Evaluating with AP")
@@ -552,6 +580,7 @@ class CriticModelMixin:
         self._build_critic_reg()
         mean_critic_error = tf.reduce_mean(critic_error) + self.critic_regularization_loss
 
+        self.true_dcg = true_dcg
         self.true_ndcg = true_ndcg
         # self.true_ap = true_ap
         self.true_recall = true_recall

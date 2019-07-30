@@ -2,10 +2,14 @@ import bottleneck as bn
 import numpy as np
 from scipy import sparse
 
-def NDCG_binary_at_k_batch(X_pred, heldout_batch, k=100, input_batch=None):
+def NDCG_binary_at_k_batch(X_pred, heldout_batch, k=100, input_batch=None, normalize=True):
     '''
     normalized discounted cumulative gain@k for binary relevance
     ASSUMPTIONS: all the 0's in heldout_data indicate 0 relevance
+
+    If normalize is set to False, then we actually return DCG, not NDCG.
+
+
     '''
     if input_batch is not None:
         X_pred[input_batch.nonzero()] = -np.inf
@@ -51,7 +55,10 @@ def NDCG_binary_at_k_batch(X_pred, heldout_batch, k=100, input_batch=None):
     #     print("bad?!")
     #     import ipdb; ipdb.set_trace()
     #     print("dab!?")
-    result = (DCG / IDCG)
+    if normalize:
+        result = (DCG / IDCG)
+    else:
+        result = DCG
     result = result.astype(np.float32)
     return result
 

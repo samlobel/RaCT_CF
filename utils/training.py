@@ -195,9 +195,16 @@ def train(model_class=None,
           omit_num_seen_from_critic=False,
           omit_num_unseen_from_critic=False,
           log_critic_training_error=False,
-          version_tag=""):
+          version_tag="",
+          #   tf_random_seed=None
+          ):
 
     # print("Just setting batches_to_anneal_over to his value.")
+
+    # if tf_random_seed is not None:
+    #     print("Setting tf random seed to something different, so we can get a mean/std")
+    #     tf.set_random_seed(tf_random_seed)
+    #     print('tf random seed set to {}'.format(tf_random_seed))
 
     assert data_subdir in ['ml-20m', 'netflix-prize', 'msd']
     assert model_class in ['multi_vae', 'warp_encoder', 'wmf', 'new_multi_dae', 'variational_wmf', 'gaussian_vae', 'phase_4_warp', 'lambdarank_actor', 'phase_4_lambdarank']
@@ -470,6 +477,11 @@ def train(model_class=None,
 
             # This tolist is because np float32 isn't json-serializeable.
             plot_data_obj[training_phase]['ndcg'].append(one_epoch_ndcg_vad.tolist())
+
+            # This is because I want to track the DCG for this one...
+            plot_data_obj[training_phase]['evaluation_score'].append(one_epoch_score.tolist())
+
+
             # plot_data_obj[training_phase]['recall50'].append(one_epoch_recall50_vad.tolist())
             # plot_data_obj[training_phase]['recall20'].append(one_epoch_recall20_vad.tolist())
             # plot_data_obj[training_phase]['ap'].append(one_epoch_ap_vad.tolist())
@@ -638,6 +650,8 @@ def test(
     # ndcg100_list, recall50_list, recall20_list = [], [], []
     ndcg100_list, recall50_list, recall20_list, ndcg200_list, ndcg5_list, ndcg3_list, ndcg1_list = [], [], [], [], [], [], []
 
+    dcg100_list = []
+
     with tf.Session() as sess:
         model.saver.restore(sess, '{}/model'.format(chkpt_dir))
         sess.run(testing_init_op)
@@ -685,6 +699,10 @@ def test(
                 ndcg1_list.append(
                     NDCG_binary_at_k_batch(
                         pred_val, heldout_batch, k=1, input_batch=batch_of_users))
+                
+                dcg100_list.append(
+                    NDCG_binary_at_k_batch(
+                        pred_val, heldout_batch, k=100, input_batch=batch_of_users, normalize=False))
 
                 # recall50_list.append(Recall_at_k_batch())
 
@@ -715,6 +733,8 @@ def test(
     # recall100_list = np.concatenate(recall100_list)
 
     # In[64]:
+    print("Test UNNORMALIZED DCG@100=%.5f (%.5f)" % (np.mean(dcg100_list),
+                                         np.std(dcg100_list) / np.sqrt(len(dcg100_list))))
     print("Test NDCG@100=%.5f (%.5f)" % (np.mean(ndcg100_list),
                                          np.std(ndcg100_list) / np.sqrt(len(ndcg100_list))))
     print("Test Recall@50=%.5f (%.5f)" % (np.mean(recall50_list),
