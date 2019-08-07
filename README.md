@@ -16,7 +16,7 @@ The main result of this paper can be reproduced via running the `scripts/main_va
 
     `mkvirtualenv --python=python3 CRITIC_CF && pip install -r requirements.txt`
 
-2. Install Tensorflow, version range >=1.10.0,<1.11. 
+2. Install Tensorflow, version range >=1.10.0,<=1.14. 
 
 3. Download the dataset you want to run with
 
