@@ -57,6 +57,9 @@ All of the scripts used to generate data are located in the `./scripts` director
 * `gather_data.py` is used to gather statistics from a fully trained model, for example figure 4/5.
 * `setup_data.py` is used to download, extract, and process the data.
 
+## Questions?
+Please drop us ([Sam](https://github.com/samlobel) and [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
+
 
 ```
 @inproceedings{Lobel_ract_2020_ICLR
@@ -66,7 +69,4 @@ All of the scripts used to generate data are located in the `./scripts` director
   year={2020}
 }
 ```
-
-## Questions?
-Please drop us ([Sam](https://github.com/samlobel) and [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
 
