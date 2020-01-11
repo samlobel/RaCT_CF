@@ -1,6 +1,7 @@
 # Ranking-Critical Training for Collaborative Filtering
 
-This repository implements [Ranking-Critical Training (RaCT) for Collaborative Filtering](https://arxiv.org/abs/1906.04281), accepted in International Conference on Learning Representations (ICLR), 2020.     
+This repository implements [Ranking-Critical Training (RaCT) for Collaborative Filtering](https://arxiv.org/abs/1906.04281), accepted in _International Conference on Learning Representations (ICLR), 2020_.     
+
 
 By using an actor-critic architecture to fine-tune a differentiable collaborative filtering model as shown in (b), we can improve the performance of a variety of MLE-based recommander functions, such as variational auto-encoders in (a).
 
@@ -56,6 +57,15 @@ All of the scripts used to generate data are located in the `./scripts` director
 * `gather_data.py` is used to gather statistics from a fully trained model, for example figure 4/5.
 * `setup_data.py` is used to download, extract, and process the data.
 
+
+```
+@inproceedings{Lobel_ract_2020_ICLR
+  title={RaCT: Towards Amortized Ranking-Critical Training for Collaborative Filtering},
+  author={Lobel, Sam and Li, Chunyuan and Gao, Jianfeng and Carin, Lawrence},
+  booktitle={International Conference on Learning Representations},
+  year={2020}
+}
+```
 
 ## Questions?
 Please drop us ([Sam](https://github.com/samlobel) and [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
