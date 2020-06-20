@@ -58,7 +58,7 @@ All of the scripts used to generate data are located in the `./scripts` director
 * `setup_data.py` is used to download, extract, and process the data.
 
 ## Questions?
-Please drop us ([Sam](https://github.com/samlobel) and [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
+Please drop us ([Sam](https://samlobel.github.io/) and [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
 
 
 ```
